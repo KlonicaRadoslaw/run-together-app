@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RunTogetherWebApp.Data;
 using RunTogetherWebApp.Interfaces;
+using RunTogetherWebApp.Models;
 
 namespace RunTogetherWebApp.Controllers
 {
@@ -23,9 +24,20 @@ namespace RunTogetherWebApp.Controllers
             return View(club);
         }
 
-        public async Task<IActionResult> Create() 
+        public async Task<IActionResult> Create()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Club club)
+        {
+            if (!ModelState.IsValid)
+                return View(club);
+
+            _clubRepository.Add(club);
+
+            return RedirectToAction("Index");
         }
     }
 }
