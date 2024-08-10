@@ -22,5 +22,10 @@ namespace RunTogetherWebApp.Controllers
             var club = await _clubRepository.GetById(id);
             return View(club);
         }
+
+        public async Task<IActionResult> Create() 
+        {
+            return View();
+        }
     }
 }
