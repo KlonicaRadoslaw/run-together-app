@@ -31,7 +31,9 @@ namespace RunTogetherWebApp.Repositories
 
         public async Task<Club> GetById(int id)
         {
-            return await _context.Clubs.FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Clubs
+                .Include(c => c.Address)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<IEnumerable<Club>> GetClubByCity(string city)
