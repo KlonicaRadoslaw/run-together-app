@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using RunTogetherWebApp.Data;
 using RunTogetherWebApp.Interfaces;
+using RunTogetherWebApp.Models;
+using RunTogetherWebApp.Repositories;
 
 namespace RunTogetherWebApp.Controllers
 {
@@ -23,6 +25,22 @@ namespace RunTogetherWebApp.Controllers
         {
             var race = await _raceRepository.GetById(id);
             return View(race);
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Race race)
+        {
+            if (!ModelState.IsValid)
+                return View(race);
+
+            _raceRepository.Add(race);
+
+            return RedirectToAction("Index");
         }
     }
 }
