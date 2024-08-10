@@ -38,7 +38,9 @@ namespace RunTogetherWebApp.Repositories
 
         public async Task<Race> GetById(int id)
         {
-            return await _context.Races.FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.Races
+                .Include(a => a.Address)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public bool Save()
