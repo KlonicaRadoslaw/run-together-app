@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RunTogetherWebApp.Data;
 using RunTogetherWebApp.Interfaces;
 using RunTogetherWebApp.Models;
 using RunTogetherWebApp.ViewModels;
@@ -121,6 +119,29 @@ namespace RunTogetherWebApp.Controllers
             {
                 return View(clubVM);
             }
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var clubDetails = await _clubRepository.GetById(id);
+
+            if (clubDetails == null)
+                return View("Error");
+
+            return View(clubDetails);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteClub(int id)
+        {
+            var clubDetails = await _clubRepository.GetById(id);
+
+            if (clubDetails == null)
+                return View("Error");
+
+            _clubRepository.Delete(clubDetails);
+
+            return RedirectToAction("Index");
         }
     }
 }
