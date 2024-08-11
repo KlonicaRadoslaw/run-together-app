@@ -43,6 +43,14 @@ namespace RunTogetherWebApp.Repositories
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
+        public async Task<Race> GetByIdNoTracking(int id)
+        {
+            return await _context.Races
+                .Include(c => c.Address)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();
