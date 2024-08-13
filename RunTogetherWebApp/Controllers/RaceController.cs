@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RunTogetherWebApp.Data;
+using RunTogetherWebApp.Extensions;
 using RunTogetherWebApp.Interfaces;
 using RunTogetherWebApp.Models;
 using RunTogetherWebApp.Repositories;
@@ -13,11 +14,13 @@ namespace RunTogetherWebApp.Controllers
     {
         private readonly IRaceRepository _raceRepository;
         private readonly IPhotoService _photoService;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public RaceController(IRaceRepository raceRepository, IPhotoService photoService)
+        public RaceController(IRaceRepository raceRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor)
         {
             _raceRepository = raceRepository;
             _photoService = photoService;
+            _contextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> Index()
         {
@@ -33,7 +36,10 @@ namespace RunTogetherWebApp.Controllers
 
         public async Task<IActionResult> Create()
         {
-            return View();
+            var currentUserId = _contextAccessor.HttpContext?.User.GetUserId();
+            var createRaceViewModel = new CreateRaceViewModel { AppUserId = currentUserId };
+
+            return View(createRaceViewModel);
         }
 
         [HttpPost]
@@ -48,6 +54,7 @@ namespace RunTogetherWebApp.Controllers
                     Title = raceVM.Title,
                     Description = raceVM.Description,
                     Image = result.Url.ToString(),
+                    AppUserId = raceVM.AppUserId,
                     Address = new Address
                     {
                         Street = raceVM.Address.Street,
