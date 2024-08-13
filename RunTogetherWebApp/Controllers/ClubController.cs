@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RunTogetherWebApp.Extensions;
 using RunTogetherWebApp.Interfaces;
 using RunTogetherWebApp.Models;
 using RunTogetherWebApp.ViewModels;
@@ -9,10 +10,12 @@ namespace RunTogetherWebApp.Controllers
     {
         private readonly IClubRepository _clubRepository;
         private readonly IPhotoService _photoService;
-        public ClubController(IClubRepository clubRepository, IPhotoService photoService)
+        private readonly IHttpContextAccessor _contextAccessor;
+        public ClubController(IClubRepository clubRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor)
         {
             _clubRepository = clubRepository;
             _photoService = photoService;
+            _contextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> Index()
         {
@@ -27,7 +30,13 @@ namespace RunTogetherWebApp.Controllers
 
         public async Task<IActionResult> Create()
         {
-            return View();
+            var currentUserId = _contextAccessor.HttpContext.User.GetUserId();
+            var createClubViemModel = new CreateClubViewModel
+            {
+                AppUserId = currentUserId
+            };
+
+            return View(createClubViemModel);
         }
 
         [HttpPost]
@@ -42,6 +51,7 @@ namespace RunTogetherWebApp.Controllers
                     Title = clubVM.Title,
                     Description = clubVM.Description,
                     Image = result.Url.ToString(),
+                    AppUserId = clubVM.AppUserId,
                     Address = new Address
                     {
                         Street = clubVM.Address.Street,
