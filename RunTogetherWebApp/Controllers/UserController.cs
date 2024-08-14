@@ -26,7 +26,8 @@ namespace RunTogetherWebApp.Controllers
                     Id = user.Id,
                     UserName = user.UserName,
                     Pace = user.Pace,
-                    Mileage = user.Milage
+                    Mileage = user.Milage,
+                    ProfileImageUrl = user.ProfileImageUrl
                 };
                 result.Add(userViewModel);
             }
