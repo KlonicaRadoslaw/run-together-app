@@ -53,17 +53,6 @@
 <!--end of section-->
 <section>
     <div class="container">
-        <div class="row justify-content-between mb-5">
-            <div class="col-auto">
-                <h3>Running clubs near @Model.City, @Model.State</h3>
-            </div>
-            <!--end of col-->
-            <div class="col-auto">
-                <a href="#" class="btn btn-outline-primary">View all</a>
-            </div>
-            <!--end of col-->
-        </div>
-        <!--end of row-->
         @if (Model.Clubs == null)
         {
             <h1 class="fw-light">
@@ -73,6 +62,16 @@
         }
         else
         {
+            <div class="row justify-content-between mb-5">
+                <div class="col-auto">
+                    <h3>Running clubs near @Model.City, @Model.State</h3>
+                </div>
+                <!--end of col-->
+                <div class="col-auto">
+                    <a href="#" class="btn btn-outline-primary">View all</a>
+                </div>
+                <!--end of col-->
+            </div>
             <ul class="row feature-list feature-list-sm">
                 @foreach (var item in Model.Clubs)
                 {
@@ -95,9 +94,8 @@
                                     </ul>
                                 </div>
                                 <div class="dropup">
-                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-no-arrow" type="button" id="SidekickButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i asp-controller="Club" asp-action="Detail" asp-route-id="@item.Id">Detail</i>
-                                    </button>
+                                    <a type="btn btn-success" asp-controller="Race" asp-action="Detail" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-secondary">View</a>
                                     <div class="dropdown-menu dropdown-menu-sm" aria-labelledby="SidekickButton">
                                         <a class="dropdown-item" href="#">Save</a>
                                         <a class="dropdown-item" href="#">Share</a>
