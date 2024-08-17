@@ -89,7 +89,7 @@ namespace RunTogetherWebApp.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Race");
+            return RedirectToAction("Index", "Home");
         }
     }
 }
