@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using RunTogetherWebApp.Data;
 using RunTogetherWebApp.Helpers;
 using RunTogetherWebApp.Interfaces;
 using RunTogetherWebApp.Models;
@@ -16,12 +18,18 @@ namespace RunTogetherWebApp.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IClubRepository _clubRepository;
         private readonly IOptions<IPInfoSettings> _config;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, IClubRepository clubRepository, IOptions<IPInfoSettings> config)
+        public HomeController(ILogger<HomeController> logger, 
+            IClubRepository clubRepository, IOptions<IPInfoSettings> config,
+            SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
         {
             _logger = logger;
             _clubRepository = clubRepository;
             _config = config;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -53,6 +61,36 @@ namespace RunTogetherWebApp.Controllers
                 homeViewModel.Clubs = null;
             }
             return View(homeViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(HomeUserCreateViewModel createVM)
+        {
+            if(!ModelState.IsValid)
+                return View(createVM);
+
+            var user = await _userManager.FindByEmailAsync(createVM.Email);
+            if(user != null)
+            {
+                TempData["Error"] = "This email address is already in use";
+                return View(createVM);
+            }
+
+            var newUser = new AppUser
+            {
+                UserName = createVM.UserName,
+                Email = createVM.Email
+            };
+
+            var newUserResponse = await _userManager.CreateAsync(newUser, createVM.Password);
+
+            if (newUserResponse.Succeeded)
+            {
+                await _signInManager.SignInAsync(newUser, isPersistent: false);
+                await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+            }
+
+            return RedirectToAction("Index", "Club");
         }
 
         public IActionResult Privacy()
