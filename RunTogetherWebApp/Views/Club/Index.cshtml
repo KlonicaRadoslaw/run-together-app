@@ -1,33 +1,73 @@
-﻿@model IEnumerable<Club>
+﻿@using RunTogetherWebApp.ViewModels
+@model IndexClubViewModel
 
 @{
     bool isAuthenticated = User.Identity?.IsAuthenticated == true;
+
+    int resultStart = ((Model.PageIndex - 1) * Model.PageSize) + 1;
+    int resultEnd = resultStart + Model.PageSize - 1;
+
+    bool isValidPage = resultStart <= Model.TotalClubs;
+
+
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
+
 <section class="space-sm flush-with-above">
+
+
     <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                @if (isValidPage)
+                {
+                    <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" type="button" class="btn btn-sm btn-outline-primary @prevDisabled">
+                        Prev
+                    </a>
+                    <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" type="button" class="btn btn-sm btn-outline-primary @nextDisabled">
+                        Next
+                    </a>
+                    <span class="text-muted text-small">Results @resultStart - @resultEnd of @Model.TotalClubs</span>
+                }
+                else
+                {
+                    <span class="text-muted text-small">Not Found</span>
+                }
+            </div>
+            <form class="d-flex align-items-center">
+                <span class="mr-2 text-muted text-small text-nowrap">Sort by:</span>
+                <select class="custom-select">
+                    <option value="alpha">Alphabetical</option>
+                    <option value="old-new" selected="">Newest</option>
+                    <option value="new-old">Oldest</option>
+                    <option value="recent">Recently Modified</option>
+                </select>
+            </form>
+        </div>
         <ul class="row feature-list feature-list-sm">
-            @foreach (var item in Model)
+            @foreach (var club in Model.Clubs)
             {
                 <li class="col-12 col-md-6 col-lg-4">
                     <div class="card">
-                        <a type="button" asp-controller="Club" asp-action="Detail" asp-route-id="@item.Id">
-                            <img class="card-img-top" src="@item.Image" alt="Card image cap" />
+                        <a type="button" asp-controller="Club" asp-action="Detail" asp-route-id="@club.Id">
+                            <img class="card-img-top" src="@club.Image" alt="Card image cap">
                         </a>
                         <div class="card-body">
-                            <h4 class="card-title">@item.Title</h4>
-                            <p class="card-text">@item.Description</p>
+                            <h4 class="card-title">@club.Title</h4>
+                            <p class="card-text">@club.Description</p>
                         </div>
                         <div class="card-footer card-footer-borderless d-flex justify-content-between">
                             <div>
-                                <small>@item.ClubCategory</small>
+                                <small>@club.ClubCategory</small>
                             </div>
                             @if (isAuthenticated && User.IsInRole("admin"))
                             {
                                 <div>
-                                    <a type="button" class="btn btn-sm btn-outline-info" asp-controller="Club" asp-action="Edit" asp-route-id="@item.Id">
+                                    <a type="button" class="btn btn-sm btn-outline-info" asp-controller="Club" asp-action="Edit" asp-route-id="@club.Id">
                                         Edit
                                     </a>
-                                    <a type="button" class="btn btn-sm btn-outline-danger" asp-controller="Club" asp-action="Delete" asp-route-id="@item.Id">
+                                    <a type="button" class="btn btn-sm btn-outline-danger" asp-controller="Club" asp-action="Delete" asp-route-id="@club.Id">
                                         Delete
                                     </a>
                                 </div>

@@ -10,17 +10,18 @@ namespace RunTogetherWebApp.Controllers
     {
         private readonly IClubRepository _clubRepository;
         private readonly IPhotoService _photoService;
-        private readonly IHttpContextAccessor _contextAccessor;
-        public ClubController(IClubRepository clubRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor)
+        public ClubController(IClubRepository clubRepository, IPhotoService photoService)
         {
             _clubRepository = clubRepository;
             _photoService = photoService;
-            _contextAccessor = httpContextAccessor;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
             var clubs = await _clubRepository.GetAll();
-            return View(clubs);
+
+            var clubViewModel = new IndexClubViewModel(clubs, pageNumber, 6);
+
+            return View(clubViewModel);
         }
         public async Task<IActionResult> Detail(int id)
         {
@@ -30,7 +31,7 @@ namespace RunTogetherWebApp.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var currentUserId = _contextAccessor.HttpContext.User.GetUserId();
+            var currentUserId = HttpContext.User.GetUserId();
             var createClubViemModel = new CreateClubViewModel
             {
                 AppUserId = currentUserId
@@ -89,7 +90,7 @@ namespace RunTogetherWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, EditClubViewModel clubVM)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Failed to edit club");
                 return View("Edit", clubVM);
@@ -97,7 +98,7 @@ namespace RunTogetherWebApp.Controllers
 
             var userClub = await _clubRepository.GetByIdNoTracking(id);
 
-            if(userClub != null)
+            if (userClub != null)
             {
                 try
                 {
