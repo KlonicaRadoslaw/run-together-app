@@ -52,7 +52,7 @@ namespace RunTogetherWebApp.Repositories
                                     .ToListAsync();
         }
 
-        public async Task<IEnumerable<Club>> GetClubsByCategoryAdnSliceAsync(ClubCategory category, int offset, int size)
+        public async Task<IEnumerable<Club>> GetClubsByCategoryAndSliceAsync(ClubCategory category, int offset, int size)
         {
             return await _context.Clubs
                 .Where(c => c.ClubCategory == category)
