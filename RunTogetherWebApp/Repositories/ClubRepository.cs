@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RunTogetherWebApp.Data;
+using RunTogetherWebApp.Data.Enum;
 using RunTogetherWebApp.Interfaces;
 using RunTogetherWebApp.Models;
 
@@ -51,9 +52,23 @@ namespace RunTogetherWebApp.Repositories
                                     .ToListAsync();
         }
 
+        public async Task<IEnumerable<Club>> GetClubsByCategoryAdnSliceAsync(ClubCategory category, int offset, int size)
+        {
+            return await _context.Clubs
+                .Where(c => c.ClubCategory == category)
+                .Skip(offset)
+                .Take(size)
+                .ToListAsync();
+        }
+
         public async Task<int> GetCountAsync()
         {
             return await _context.Clubs.CountAsync();
+        }
+
+        public async Task<int> GetCountByCategoryAsync(ClubCategory category)
+        {
+            return await _context.Clubs.CountAsync(c => c.ClubCategory == category);
         }
 
         public async Task<IEnumerable<Club>> GetSliceAsync(int offset, int size)
