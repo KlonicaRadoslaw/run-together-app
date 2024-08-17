@@ -51,6 +51,16 @@ namespace RunTogetherWebApp.Repositories
                                     .ToListAsync();
         }
 
+        public async Task<int> GetCountAsync()
+        {
+            return await _context.Clubs.CountAsync();
+        }
+
+        public async Task<IEnumerable<Club>> GetSliceAsync(int offset, int size)
+        {
+            return await _context.Clubs.Skip(offset).Take(size).ToListAsync();
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();
