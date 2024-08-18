@@ -15,7 +15,8 @@ namespace RunTogetherWebApp.Repositories
         }
         public bool Add(AppUser user)
         {
-            throw new NotImplementedException();
+            _context.Users.Add(user);
+            return Save();
         }
 
         public bool Delete(string id)
