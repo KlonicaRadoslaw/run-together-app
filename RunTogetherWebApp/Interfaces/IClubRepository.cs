@@ -13,6 +13,10 @@ namespace RunTogetherWebApp.Interfaces
         Task<int> GetCountAsync();
         Task<IEnumerable<Club>> GetClubsByCategoryAndSliceAsync(ClubCategory category, int offset, int size);
         Task<int> GetCountByCategoryAsync(ClubCategory category);
+        Task<IEnumerable<Club>> GetClubsByState(string state);
+        Task<List<State>> GetAllStates();
+        Task<List<City>> GetAllCitiesByState(string state);
+
         bool Add(Club club);
         bool Update(Club club);
         bool Delete(Club club);
