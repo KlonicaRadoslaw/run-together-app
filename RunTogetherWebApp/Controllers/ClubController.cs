@@ -80,6 +80,7 @@ namespace RunTogetherWebApp.Controllers
                     Title = clubVM.Title,
                     Description = clubVM.Description,
                     Image = result.Url.ToString(),
+                    ClubCategory = clubVM.ClubCategory,
                     AppUserId = clubVM.AppUserId,
                     Address = new Address
                     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RunTogetherWebApp.Data;
+using RunTogetherWebApp.Data.Enum;
 using RunTogetherWebApp.Extensions;
 using RunTogetherWebApp.Interfaces;
 using RunTogetherWebApp.Models;
@@ -28,10 +29,42 @@ namespace RunTogetherWebApp.Controllers
             return View(races);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Index(int category = -1, int page = 1, int pageSize = 6)
+        {
+            if (page < 1 || pageSize < 1)
+                return NotFound();
+
+            // if category is -1 don't filter else filter by selected category
+            var races = category switch
+            {
+                -1 => await _raceRepository.GetSliceAsync((page - 1) * pageSize, pageSize),
+                _ => await _raceRepository.GetRacesByCategoryAndSliceAsync((RaceCategory)category, (page - 1) * pageSize, pageSize)
+            };
+
+            var count = category switch
+            {
+                -1 => await _raceRepository.GetCountAsync(),
+                _ => await _raceRepository.GetCountByCategoryAsync((RaceCategory)category),
+            };
+
+            var viewModel = new IndexRaceViewModel
+            {
+                Races = races,
+                Page = page,
+                PageSize = pageSize,
+                TotalRaces = count,
+                TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                Category = category
+            };
+
+            return View(viewModel);
+        }
+
         public async Task<IActionResult> Detail(int id)
         {
             var race = await _raceRepository.GetById(id);
-            return View(race);
+            return race == null ? NotFound() : View(race);
         }
 
         public async Task<IActionResult> Create()
@@ -55,6 +88,7 @@ namespace RunTogetherWebApp.Controllers
                     Description = raceVM.Description,
                     Image = result.Url.ToString(),
                     AppUserId = raceVM.AppUserId,
+                    RaceCategory = raceVM.RaceCategory,
                     Address = new Address
                     {
                         Street = raceVM.Address.Street,
