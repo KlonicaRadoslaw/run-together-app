@@ -33,13 +33,15 @@ namespace RunTogetherWebApp.Controllers
         public async Task<IActionResult> Index(int category = -1, int page = 1, int pageSize = 6)
         {
             if (page < 1 || pageSize < 1)
+            {
                 return NotFound();
+            }
 
-            // if category is -1 don't filter else filter by selected category
+            // if category is -1 (All) dont filter else filter by selected category
             var races = category switch
             {
                 -1 => await _raceRepository.GetSliceAsync((page - 1) * pageSize, pageSize),
-                _ => await _raceRepository.GetRacesByCategoryAndSliceAsync((RaceCategory)category, (page - 1) * pageSize, pageSize)
+                _ => await _raceRepository.GetRacesByCategoryAndSliceAsync((RaceCategory)category, (page - 1) * pageSize, pageSize),
             };
 
             var count = category switch
@@ -55,7 +57,7 @@ namespace RunTogetherWebApp.Controllers
                 PageSize = pageSize,
                 TotalRaces = count,
                 TotalPages = (int)Math.Ceiling(count / (double)pageSize),
-                Category = category
+                Category = category,
             };
 
             return View(viewModel);

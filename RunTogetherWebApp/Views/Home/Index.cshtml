@@ -71,7 +71,7 @@
                 </div>
                 <!--end of col-->
                 <div class="col-auto">
-                    <a href="#" class="btn btn-outline-primary">View all</a>
+                    <a asp-controller="Club" asp-action="Index" class="btn btn-outline-primary">View all</a>
                 </div>
                 <!--end of col-->
             </div>
@@ -80,8 +80,15 @@
                 {
                     <li class="col-12 col-md-6 col-lg-4">
                         <div class="card">
-                            <a href="#">
-                                <img class="card-img-top" src="@item.Image" alt="Card image cap">
+                            <a asp-controller="Club" asp-action="Detail" asp-route-id="@item.Id">
+                                @if (@item.Image != null)
+                                {
+                                    <img class="card-img-top" src="@item.Image" alt="Card image cap">
+                                }
+                                else
+                                {
+                                    <img class="card-img-top" src="/img/runtogetherclub.png" alt="Card image cap">
+                                }
                             </a>
                             <div class="card-body">
                                 <a href="#">

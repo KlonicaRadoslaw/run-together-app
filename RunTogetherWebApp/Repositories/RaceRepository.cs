@@ -27,7 +27,7 @@ namespace RunTogetherWebApp.Repositories
 
         public async Task<IEnumerable<Race>> GetAll()
         {
-            return await _context.Races.ToListAsync();
+            return await _context.Races.Include(a => a.Address).ToListAsync();
         }
 
         public async Task<IEnumerable<Race>> GetAllByCity(string city)
@@ -75,6 +75,7 @@ namespace RunTogetherWebApp.Repositories
         public async Task<IEnumerable<Race>> GetSliceAsync(int offset, int size)
         {
             return await _context.Races
+                .Include(a => a.Address)
                 .Skip(offset)
                 .Take(size)
                 .ToListAsync();
