@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RunTogetherWebApp.Data;
+using RunTogetherWebApp.Data.Enum;
 using RunTogetherWebApp.Interfaces;
 using RunTogetherWebApp.Models;
 
@@ -49,6 +50,33 @@ namespace RunTogetherWebApp.Repositories
                 .Include(c => c.Address)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await _context.Races.CountAsync();
+        }
+
+        public async Task<int> GetCountByCategoryAsync(RaceCategory category)
+        {
+            return await _context.Races.CountAsync(r => r.RaceCategory == category);
+        }
+
+        public async Task<IEnumerable<Race>> GetRacesByCategoryAndSliceAsync(RaceCategory category, int offset, int size)
+        {
+            return await _context.Races
+                .Where(r => r.RaceCategory == category)
+                .Skip(offset)
+                .Take(size)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Race>> GetSliceAsync(int offset, int size)
+        {
+            return await _context.Races
+                .Skip(offset)
+                .Take(size)
+                .ToListAsync();
         }
 
         public bool Save()
