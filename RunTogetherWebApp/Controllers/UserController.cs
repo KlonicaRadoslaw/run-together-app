@@ -24,10 +24,12 @@ namespace RunTogetherWebApp.Controllers
                 var userViewModel = new UserViewModel()
                 {
                     Id = user.Id,
-                    UserName = user.UserName,
                     Pace = user.Pace,
+                    City = user.City,
+                    State = user.State,
                     Mileage = user.Milage,
-                    ProfileImageUrl = user.ProfileImageUrl
+                    UserName = user.UserName,
+                    ProfileImageUrl = user.ProfileImageUrl ?? "/img/avatar-male-4.jpg"
                 };
                 result.Add(userViewModel);
             }
@@ -37,12 +39,19 @@ namespace RunTogetherWebApp.Controllers
         public async Task<IActionResult> Detail(string id)
         {
             var user = await _userRepository.GetUserById(id);
+
+            if(user == null)
+                return RedirectToAction("Index", "Users");
+
             var userDetailViewModel = new UserDetailViewModel()
             {
                 Id = user.Id,
-                UserName = user.UserName,
                 Pace = user.Pace,
-                Mileage = user.Milage
+                City = user.City,
+                State = user.State,
+                Mileage = user.Milage,
+                UserName = user.UserName,
+                ProfileImageUrl = user.ProfileImageUrl ?? "/img/avatar-male-4.jpg"
             };
             return View(userDetailViewModel);
         }
