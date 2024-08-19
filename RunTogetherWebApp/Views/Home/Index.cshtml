@@ -18,19 +18,22 @@
             <div class="col-12 col-md-6 col-lg-5">
                 <div class="card">
                     <div class="card-body">
-                        <form>
+                        <form asp-action="Index">
                             <div class="form-group">
-                                <label for="exampleInputUsername">Username</label>
-                                <input type="text" class="form-control form-control-lg" id="exampleInputUsername" placeholder="Pick a username">
+                                <label asp-for="Register.UserName">Username</label>
+                                <input asp-for="Register.UserName" type="text" class="form-control form-control-lg" placeholder="Pick a username">
+                                <span asp-validation-for="Register.UserName" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail">Email address</label>
-                                <input type="email" class="form-control form-control-lg" id="exampleInputEmail" placeholder="Enter email">
+                                <label asp-for="Register.Email">Email address</label>
+                                <input asp-for="Register.Email" type="email" class="form-control form-control-lg" placeholder="Enter email">
+                                <span asp-validation-for="Register.Email" class="text-danger"></span>
                                 <small id="emailHelp" class="form-text">We'll never share your email with anyone else.</small>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword">Password</label>
-                                <input type="password" class="form-control form-control-lg" id="exampleInputPassword" placeholder="Password">
+                                <label asp-for="Register.Password">Password</label>
+                                <input asp-for="Register.Password" type="password" class="form-control form-control-lg" placeholder="Password">
+                                <span asp-validation-for="Register.Password" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
                                 <div class="custom-control custom-checkbox">
@@ -40,7 +43,7 @@
                                     </label>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-lg btn-success btn-block">Sign up for Wingman</button>
+                            <button type="submit" class="btn btn-lg btn-success btn-block">Sign up for RunTogether</button>
                         </form>
                     </div>
                 </div>

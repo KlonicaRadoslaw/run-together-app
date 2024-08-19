@@ -64,16 +64,18 @@ namespace RunTogetherWebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(HomeUserCreateViewModel createVM)
+        public async Task<IActionResult> Index(HomeViewModel homeVM)
         {
+            var createVM = homeVM.Register;
+
             if(!ModelState.IsValid)
-                return View(createVM);
+                return View(homeVM);
 
             var user = await _userManager.FindByEmailAsync(createVM.Email);
             if(user != null)
             {
-                TempData["Error"] = "This email address is already in use";
-                return View(createVM);
+                ModelState.AddModelError("Register.Email", "This email address is already in use");
+                return View(homeVM);
             }
 
             var newUser = new AppUser
