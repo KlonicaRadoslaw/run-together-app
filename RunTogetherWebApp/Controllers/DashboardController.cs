@@ -10,15 +10,12 @@ namespace RunTogetherWebApp.Controllers
     public class DashboardController : Controller
     {
         private readonly IDashboardRepository _dashboardRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPhotoService _photoService;
 
-        public DashboardController(IDashboardRepository dashboardRepository, 
-                                   IHttpContextAccessor httpContextAccessor,
+        public DashboardController(IDashboardRepository dashboardRepository,
                                    IPhotoService photoService)
         {
             _dashboardRepository = dashboardRepository;
-            _httpContextAccessor = httpContextAccessor;
             _photoService = photoService;
         }
 
@@ -43,10 +40,10 @@ namespace RunTogetherWebApp.Controllers
             };
             return View(dashboardViewModel);
         }
-
+        [HttpGet]
         public async Task<IActionResult> EditUserProfile()
         {
-            var currentUserId = _httpContextAccessor.HttpContext?.User.GetUserId();
+            var currentUserId = HttpContext?.User.GetUserId();
             var user = await _dashboardRepository.GetUserById(currentUserId);
 
             if (user == null)
@@ -76,35 +73,25 @@ namespace RunTogetherWebApp.Controllers
 
             var user = await _dashboardRepository.GetByIdNoTracking(editVM.Id);
 
-            if(user.ProfileImageUrl == "" || user.ProfileImageUrl == null)
+            if (user == null)
+                return View("Error");
+
+            var photoResult = await _photoService.AddPhotoAsync(editVM.Image);
+
+            if (photoResult.Error != null)
             {
-                var photoResult = await _photoService.AddPhotoAsync(editVM.Image);
-
-                MapUserEdit(user, editVM, photoResult);
-
-                _dashboardRepository.Update(user);
-
-                return RedirectToAction("Index");
+                ModelState.AddModelError("Image", "Failed to upload image");
+                return View("EditUserProfile", editVM);
             }
-            else
-            {
-                try
-                {
-                    await _photoService.DeletePhotoAsync(user.ProfileImageUrl);
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Could not delete photo");
-                    return View(editVM);
-                }
-                var photoResult = await _photoService.AddPhotoAsync(editVM.Image);
 
-                MapUserEdit(user, editVM, photoResult);
+            if (!string.IsNullOrEmpty(user.ProfileImageUrl))
+                _ = _photoService.DeletePhotoAsync(user.ProfileImageUrl);
 
-                _dashboardRepository.Update(user);
+            MapUserEdit(user, editVM, photoResult);
 
-                return RedirectToAction("Index");
-            }
+            _dashboardRepository.Update(user);
+
+            return RedirectToAction("Index");
         }
     }
 }

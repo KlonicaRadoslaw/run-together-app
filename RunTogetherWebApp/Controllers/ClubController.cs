@@ -17,6 +17,8 @@ namespace RunTogetherWebApp.Controllers
             _clubRepository = clubRepository;
             _photoService = photoService;
         }
+
+        [HttpGet]
         [Route("RunningClubs")]
         public async Task<IActionResult> Index(int category = -1, int page = 1, int pageSize = 6)
         {
@@ -57,6 +59,7 @@ namespace RunTogetherWebApp.Controllers
             return club == null ? NotFound() : View(club);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var currentUserId = HttpContext.User.GetUserId();
@@ -98,6 +101,7 @@ namespace RunTogetherWebApp.Controllers
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var club = await _clubRepository.GetById(id);
@@ -127,40 +131,35 @@ namespace RunTogetherWebApp.Controllers
 
             var userClub = await _clubRepository.GetByIdNoTracking(id);
 
-            if (userClub != null)
+            if (userClub == null)
+                return View("Error");
+
+            var photoResult = await _photoService.AddPhotoAsync(clubVM.Image);
+
+            if(photoResult.Error != null)
             {
-                try
-                {
-                    await _photoService.DeletePhotoAsync(userClub.Image);
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Could not delete photo");
-                    return View(clubVM);
-                }
-
-                var photoResult = await _photoService.AddPhotoAsync(clubVM.Image);
-
-                var club = new Club
-                {
-                    Id = id,
-                    Title = clubVM.Title,
-                    Description = clubVM.Description,
-                    Image = photoResult.Url.ToString(),
-                    AddressId = (int)clubVM.AddressId,
-                    Address = clubVM.Address
-                };
-
-                _clubRepository.Update(club);
-
-                return RedirectToAction("Index");
-            }
-            else
-            {
+                ModelState.AddModelError("Image", "Photo upload failed");
                 return View(clubVM);
             }
-        }
 
+            if(!string.IsNullOrEmpty(userClub.Image))
+                _ = _photoService.DeletePhotoAsync(userClub.Image);
+
+            var club = new Club
+            {
+                Id = id,
+                Title = clubVM.Title,
+                Description = clubVM.Description,
+                Image = photoResult.Url.ToString(),
+                AddressId = (int)clubVM.AddressId,
+                Address = clubVM.Address
+            };
+
+            _clubRepository.Update(club);
+
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var clubDetails = await _clubRepository.GetById(id);
@@ -178,6 +177,9 @@ namespace RunTogetherWebApp.Controllers
 
             if (clubDetails == null)
                 return View("Error");
+
+            if (!string.IsNullOrEmpty(clubDetails.Image))
+                _ = _photoService.DeletePhotoAsync(clubDetails.Image);
 
             _clubRepository.Delete(clubDetails);
 
