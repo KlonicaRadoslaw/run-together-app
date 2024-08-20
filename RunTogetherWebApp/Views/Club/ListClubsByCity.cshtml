@@ -1,4 +1,7 @@
-﻿@using RunTogetherWebApp.ViewModels
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+
+@using RunTogetherWebApp.ViewModels
 @model ListClubByCityViewModel
 
 @{
@@ -34,7 +37,7 @@
                             <div>
                                 <small>@club.ClubCategory</small>
                             </div>
-                            @if (isAuthenticated && User.IsInRole("admin"))
+                            @if (SignInManager.IsSignedIn(User) && User.IsInRole("admin"))
                             {
                                 <div>
                                     <a type="button" class="btn btn-sm btn-outline-info" asp-controller="Club" asp-action="Edit" asp-route-id="@club.Id">
