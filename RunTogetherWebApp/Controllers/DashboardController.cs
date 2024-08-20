@@ -1,4 +1,5 @@
 ﻿using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RunTogetherWebApp.Extensions;
 using RunTogetherWebApp.Interfaces;
@@ -7,6 +8,7 @@ using RunTogetherWebApp.ViewModels;
 
 namespace RunTogetherWebApp.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly IDashboardRepository _dashboardRepository;
