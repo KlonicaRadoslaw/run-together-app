@@ -68,6 +68,7 @@ namespace RunTogetherWebApp.Repositories
         public async Task<IEnumerable<Club>> GetClubsByCategoryAndSliceAsync(ClubCategory category, int offset, int size)
         {
             return await _context.Clubs
+                .Include(i => i.Address)
                 .Where(c => c.ClubCategory == category)
                 .Skip(offset)
                 .Take(size)
@@ -95,6 +96,7 @@ namespace RunTogetherWebApp.Repositories
         public async Task<IEnumerable<Club>> GetSliceAsync(int offset, int size)
         {
             return await _context.Clubs
+                .Include(i => i.Address)
                 .Skip(offset)
                 .Take(size)
                 .ToListAsync();

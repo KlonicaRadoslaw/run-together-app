@@ -147,7 +147,7 @@ namespace RunTogetherWebApp.Controllers
                     Title = clubVM.Title,
                     Description = clubVM.Description,
                     Image = photoResult.Url.ToString(),
-                    AddressId = clubVM.AddressId,
+                    AddressId = (int)clubVM.AddressId,
                     Address = clubVM.Address
                 };
 
