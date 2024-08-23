@@ -21,7 +21,7 @@ namespace RunTogetherWebApp.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, 
+        public HomeController(ILogger<HomeController> logger,
             IClubRepository clubRepository, IOptions<IPInfoSettings> config,
             SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
         {
@@ -45,7 +45,7 @@ namespace RunTogetherWebApp.Controllers
                 ipInfo.Country = myRI1.EnglishName;
                 homeViewModel.City = ipInfo.City;
                 homeViewModel.State = ipInfo.Region;
-                if(homeViewModel.City != null)
+                if (homeViewModel.City != null)
                 {
                     homeViewModel.Clubs = await _clubRepository.GetClubByCity(homeViewModel.City);
                 }
@@ -68,11 +68,11 @@ namespace RunTogetherWebApp.Controllers
         {
             var createVM = homeVM.Register;
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return View(homeVM);
 
             var user = await _userManager.FindByEmailAsync(createVM.Email);
-            if(user != null)
+            if (user != null)
             {
                 ModelState.AddModelError("Register.Email", "This email address is already in use");
                 return View(homeVM);
