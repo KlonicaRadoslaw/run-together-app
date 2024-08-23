@@ -1,6 +1,6 @@
 ﻿namespace RunTogetherWebApp.ViewModels
 {
-    public class EditUserDashboardViewModel
+    public class EditProfileViewModel
     {
         public string Id { get; set; }
         public int? Pace { get; set; }
