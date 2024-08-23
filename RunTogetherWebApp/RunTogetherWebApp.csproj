@@ -21,7 +21,6 @@
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\fonts\" />
     <Folder Include="wwwroot\img\" />
-    <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
 </Project>

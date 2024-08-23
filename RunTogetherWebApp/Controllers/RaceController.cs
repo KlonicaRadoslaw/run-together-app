@@ -57,7 +57,8 @@ namespace RunTogetherWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detail(int id)
+        [Route("event/{runningRace}/{id}")]
+        public async Task<IActionResult> DetailRace(int id, string runningRace)
         {
             var race = await _raceRepository.GetById(id);
             return race == null ? NotFound() : View(race);
