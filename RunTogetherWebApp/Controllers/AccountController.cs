@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RunTogetherWebApp.Data;
+using RunTogetherWebApp.Interfaces;
 using RunTogetherWebApp.Models;
 using RunTogetherWebApp.ViewModels;
 
@@ -10,11 +11,13 @@ namespace RunTogetherWebApp.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly ILocationService _locationService;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ILocationService locationService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _locationService = locationService;
         }
 
         [HttpGet]
@@ -91,6 +94,17 @@ namespace RunTogetherWebApp.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLocation(string location)
+        {
+            if (location == null)
+            {
+                return Json("Not found");
+            }
+            var locationResult = await _locationService.GetLocationSearch(location);
+            return Json(locationResult);
         }
     }
 }
