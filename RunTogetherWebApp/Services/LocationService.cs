@@ -21,7 +21,8 @@ namespace RunTogetherWebApp.Services
                 return await _context.Cities
                     .Where(x => x.Zip.ToString()
                     .StartsWith(location))
-                    .Take(10)
+                    .Take(4)
+                    .Distinct()
                     .ToListAsync();
             else if (location.Length > 0)
                 result = await _context.Cities
