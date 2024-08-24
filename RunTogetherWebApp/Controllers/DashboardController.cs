@@ -12,13 +12,10 @@ namespace RunTogetherWebApp.Controllers
     public class DashboardController : Controller
     {
         private readonly IDashboardRepository _dashboardRepository;
-        private readonly IPhotoService _photoService;
 
-        public DashboardController(IDashboardRepository dashboardRepository,
-                                   IPhotoService photoService)
+        public DashboardController(IDashboardRepository dashboardRepository)
         {
             _dashboardRepository = dashboardRepository;
-            _photoService = photoService;
         }
 
         public async Task<IActionResult> Index()
