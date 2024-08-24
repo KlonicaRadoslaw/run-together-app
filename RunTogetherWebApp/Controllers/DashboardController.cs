@@ -1,9 +1,6 @@
-﻿using CloudinaryDotNet.Actions;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RunTogetherWebApp.Extensions;
 using RunTogetherWebApp.Interfaces;
-using RunTogetherWebApp.Models;
 using RunTogetherWebApp.ViewModels;
 
 namespace RunTogetherWebApp.Controllers
