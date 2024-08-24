@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using RunTogetherWebApp.Controllers;
 using RunTogetherWebApp.Data;
+using RunTogetherWebApp.Interfaces;
 using RunTogetherWebApp.Models;
 using RunTogetherWebApp.ViewModels;
 using System;
@@ -22,6 +23,7 @@ namespace RunTogetherWebApp.Tests.Controller
         private AccountController _accountController;
         private UserManager<AppUser> _userManager;
         private SignInManager<AppUser> _signInManager;
+        private ILocationService _locationService;
         private ApplicationDbContext _context;
 
         public AccountControllerTests()
@@ -62,7 +64,7 @@ namespace RunTogetherWebApp.Tests.Controller
 
             // TempData setup
             var tempData = A.Fake<ITempDataDictionary>();
-            _accountController = new AccountController(_userManager, _signInManager, _context)
+            _accountController = new AccountController(_userManager, _signInManager, _locationService)
             {
                 TempData = tempData
             };

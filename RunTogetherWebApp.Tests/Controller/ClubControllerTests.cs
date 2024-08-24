@@ -57,7 +57,7 @@ namespace RunTogetherWebApp.Tests.Controller
             A.CallTo(() => _clubRepository.GetById(1)).Returns(Task.FromResult(club));
 
             // Act
-            var result = await _clubController.Detail(1);
+            var result = await _clubController.DetailClub(1, "Test Club");
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -72,7 +72,7 @@ namespace RunTogetherWebApp.Tests.Controller
             A.CallTo(() => _clubRepository.GetById(A<int>.Ignored)).Returns(Task.FromResult<Club>(null));
 
             // Act
-            var result = await _clubController.Detail(1);
+            var result = await _clubController.DetailClub(1, "Test Club");
 
             // Assert
             Assert.IsType<NotFoundResult>(result);

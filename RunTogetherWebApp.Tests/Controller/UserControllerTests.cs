@@ -1,5 +1,6 @@
 ﻿using FakeItEasy;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RunTogetherWebApp.Controllers;
 using RunTogetherWebApp.Interfaces;
@@ -16,6 +17,8 @@ namespace RunTogetherWebApp.Tests.Controller
     {
         private UserController _userController;
         private IUserRepository _userRepository;
+        private UserManager<AppUser> _userManager;
+        private IPhotoService _photoService;
 
         public UserControllerTests()
         {
@@ -23,7 +26,7 @@ namespace RunTogetherWebApp.Tests.Controller
             _userRepository = A.Fake<IUserRepository>();
 
             // SUT
-            _userController = new UserController(_userRepository);
+            _userController = new UserController(_userRepository, _userManager, _photoService);
         }
 
         [Fact]
