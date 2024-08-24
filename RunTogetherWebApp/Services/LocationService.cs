@@ -14,6 +14,11 @@ namespace RunTogetherWebApp.Services
             _context = context;
         }
 
+        public async Task<City> GetCityByZipCode(int zipCode)
+        {
+            return await _context.Cities.FirstOrDefaultAsync(x => x.Zip == zipCode);
+        }
+
         public async Task<List<City>> GetLocationSearch(string location)
         {
             List<City> result;
